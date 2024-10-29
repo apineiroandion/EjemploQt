@@ -1,7 +1,7 @@
 import sys
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import (QApplication, QMainWindow, QLabel, QVBoxLayout, QPushButton, QWidget)
+from PyQt6.QtWidgets import (QApplication, QMainWindow, QLabel, QVBoxLayout, QPushButton, QWidget, QLineEdit)
 from PyQt6.uic.Compiler.qtproxies import QtWidgets
 
 
@@ -23,8 +23,12 @@ class PrimeraFiestra(QMainWindow):                                  ## Creamos u
         ##Creamos el Layout
         caixaV = QVBoxLayout()                                      ## Creamos un Box Layout Vertical
 
-        botonSaludar = QPushButton("Saludar")                       ## Creamos un botón
-        botonSaludar.clicked.connect(self.saludarYActualizar)    ## Conectamos la señal clicked al slot print("Hola Mundo")
+        self.botonSaludar = QPushButton("Saludar")                       ## Creamos un botón
+        self.botonSaludar.clicked.connect(self.saludarYActualizar)    ## Conectamos la señal clicked al slot print("Hola Mundo")
+        self.campoNombre = QLineEdit()
+        self.campoNombre.setPlaceholderText("Introduce tu nombre")
+        self.campoNombre.returnPressed.connect(self.saludarYActualizar)
+
 
         self.textoLabel = QLabel(self.texto)                           ## Creamos un label con el texto
 
@@ -33,14 +37,16 @@ class PrimeraFiestra(QMainWindow):                                  ## Creamos u
 
         container.setLayout(caixaV)                                 ## Establecemos el layout como contenido del widget contenedor
         self.setCentralWidget(container)                            ## Establecemos el layout como contenido central de la ventana
+        caixaV.addWidget(self.campoNombre)
         caixaV.addWidget(self.textoLabel)                              ## Añadimos el label al layout
-        caixaV.addWidget(botonSaludar)                              ## Añadimos el botón al layout
+        caixaV.addWidget(self.botonSaludar)                              ## Añadimos el botón al layout
 
     def saludar(self):                                              ## Metodo que se ejecutará al hacer click en el botón
-        print(f"Hola Mundo {self.contador}")                                         ## Imprimimos "Hola Mundo"
+        self.nombre = self.campoNombre.text()
+        print(f"Hola {self.nombre} , {self.contador}")                                         ## Imprimimos "Hola Mundo"
 
     def actualizarLabel(self):
-        self.texto = f"Hola Mundo {self.contador}"
+        self.texto = f"Hola {self.nombre} {self.contador}"
         self.textoLabel.setText(self.texto)
         self.textoLabel.repaint()
 
@@ -48,6 +54,9 @@ class PrimeraFiestra(QMainWindow):                                  ## Creamos u
         self.saludar()
         self.actualizarLabel()
         self.contador += 1
+        self.botonSaludar.hide()
+        self.campoNombre.setDisabled(True)
+
 
 
 
